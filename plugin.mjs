@@ -6,92 +6,38 @@
  */
 
 /**
- * The side-by-side directive transformer
- * @param {Object} node - The directive node to transform
- * @param {Object} vfile - The virtual file
- * @param {Object} data - Additional data
+ * Plugin export
  */
-function sideBySideDirective(node, vfile, data) {
-  // Extract the id from the directive arguments
-  const id = node.arguments?.[0]?.value || node.args || '';
-  
-  // Extract caption from directive body if present
-  let caption = '';
-  if (node.children && node.children.length > 0) {
-    // Find text content in children for caption
-    const captionNodes = node.children.filter(child => 
-      child.type === 'text' || child.type === 'paragraph'
-    );
-    if (captionNodes.length > 0) {
-      caption = captionNodes.map(n => n.value || '').join('\n');
-    }
-  }
-  
-  // Get caption from options if provided
-  if (node.options?.caption) {
-    caption = node.options.caption;
-  }
 
-  // Create the transformed structure
-  // Outer figure container
-  const outerFigure = {
-    type: 'container',
-    kind: 'figure',
-    children: [
-      // Left side - Code with card wrapper
-      {
-        type: 'container',
-        kind: 'figure',
-        children: [
-          {
-            type: 'card',
-            children: [
-              {
-                type: 'embed',
-                source: id,
-                'remove-output': true,
-                'remove-input': false
-              }
-            ]
-          }
-        ]
-      },
-      // Right side - Output
-      {
-        type: 'container',
-        kind: 'figure',
-        children: [
-          {
-            type: 'embed',
-            source: id,
-            'remove-output': false,
-            'remove-input': true
-          }
-        ]
-      }
-    ]
-  };
-  
-  // Add caption if present
-  if (caption) {
-    outerFigure.children.push({
-      type: 'caption',
-      children: [
-        {
-          type: 'text',
-          value: caption
-        }
-      ]
-    });
+/**
+ * Extract cell ID from directive argument data.
+ * Handles both string and parsed MyST argument formats.
+ * @param {*} rawId - The raw argument data from the directive
+ * @returns {string} The extracted cell ID (without leading #)
+ */
+function extractCellId(rawId) {
+  // Handle parsed MyST arguments (array of nodes)
+  if (Array.isArray(rawId) && rawId.length > 0 && rawId[0].value) {
+    return rawId[0].value;
   }
   
-  // Replace the node with the transformed structure
-  Object.assign(node, outerFigure);
+  // Handle string arguments
+  if (typeof rawId === 'string') {
+    return rawId;
+  }
+  
+  return '';
 }
 
 /**
- * Plugin export
+ * Remove leading # from cell ID if present.
+ * @param {string} id - Cell ID that might have a leading #
+ * @returns {string} Cell ID without leading #
  */
+function normalizeId(id) {
+  return id.startsWith('#') ? id.substring(1) : id;
+}
+
 const plugin = {
   name: 'myst-side-by-side',
   directives: [
@@ -99,32 +45,92 @@ const plugin = {
       name: 'side-by-side',
       doc: 'Display external notebook cells side by side with code on left and output on right',
       arg: {
-        type: String,
+        type: 'myst',
+        required: true,
         doc: 'The reference ID of the notebook cell to embed (e.g., #cell-id)'
       },
       options: {
         caption: {
-          type: String,
+          type: 'myst',
           doc: 'Caption for the figure'
         }
       },
       body: {
-        type: String,
+        type: 'myst',
         doc: 'Caption text (alternative to caption option)'
       },
       run(data) {
-        return [data];
-      }
-    }
-  ],
-  transforms: [
-    {
-      stage: 'document',
-      plugin: 'myst-side-by-side',
-      transform({ node, vfile, data }) {
-        if (node.type === 'directive' && node.name === 'side-by-side') {
-          sideBySideDirective(node, vfile, data);
+        // Extract and normalize the cell ID from directive arguments
+        const rawId = data.arg || '';
+        let id = normalizeId(extractCellId(rawId));
+        
+        // Extract caption from directive body if present
+        let captionNodes = [];
+        if (data.body && data.body.length > 0) {
+          captionNodes = data.body;
         }
+        
+        // Get caption from options if provided (takes precedence)
+        if (data.options?.caption) {
+          captionNodes = data.options.caption;
+        }
+
+        // Create the nested container structure matching the reference:
+        // Outer figure container with two nested figure subcontainers
+        // According to MyST embed transform code, embed nodes need source.label
+        const outerChildren = [
+          // Left side - Code only in a figure container
+          {
+            type: 'container',
+            kind: 'figure',
+            subcontainer: true,
+            children: [
+              {
+                type: 'embed',
+                source: {
+                  label: id
+                },
+                'remove-output': true,
+                'remove-input': false,
+                children: []
+              }
+            ]
+          },
+          // Right side - Output only in a figure container
+          {
+            type: 'container',
+            kind: 'figure',
+            subcontainer: true,
+            children: [
+              {
+                type: 'embed',
+                source: {
+                  label: id
+                },
+                'remove-output': false,
+                'remove-input': true,
+                children: []
+              }
+            ]
+          }
+        ];
+        
+        // Add caption if present
+        if (captionNodes.length > 0) {
+          outerChildren.push({
+            type: 'caption',
+            children: captionNodes
+          });
+        }
+        
+        // Return the outer figure container
+        return [
+          {
+            type: 'container',
+            kind: 'figure',
+            children: outerChildren
+          }
+        ];
       }
     }
   ]

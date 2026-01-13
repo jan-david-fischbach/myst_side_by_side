@@ -2,10 +2,9 @@
   "name": "myst-side-by-side",
   "version": "0.1.0",
   "description": "A MyST plugin for displaying notebook cells side by side",
-  "main": "dist/index.js",
+  "main": "dist/index.mjs",
   "type": "module",
   "scripts": {
-    "build": "node build.mjs",
     "test": "node test-comprehensive.mjs",
     "test:basic": "node test.mjs"
   },

@@ -81,6 +81,18 @@ Run tests:
 npm test
 ```
 
+### Testing the Plugin
+
+See [TESTING.md](TESTING.md) for detailed instructions on how to verify the plugin works correctly with a real MyST project.
+
+Quick test:
+```bash
+npm run build
+cd test-project
+myst build --all
+python3 verify_plugin.py
+```
+
 ## License
 
 MIT
