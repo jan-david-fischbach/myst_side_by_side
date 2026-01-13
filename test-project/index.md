@@ -14,6 +14,31 @@ Basic example showing code and output side by side
 :caption: Figure 1: Calculation showing code and result
 ::::
 
+
+## Structure that is generated under the hood
+:::::: {figure}
+::::: {figure}
+:::{embed} #test-cell-1
+:remove-output: true
+:remove-input: false
+:::
+:::::
+
+:::: {figure}
+:::{embed} #test-cell-1
+:remove-output: false
+:remove-input: true
+:::
+::::
+
+Basic Caption supported
+::::::
+
+## Pure `embed`
+::::{embed} #test-cell-2
+:caption: Figure 1: Calculation showing code and result
+::::
+
 ## Expected Behavior
 
 The plugin should transform these directives into a layout that shows:

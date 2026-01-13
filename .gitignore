@@ -4,3 +4,6 @@ dist/
 .DS_Store
 test-project/_build/
 test-project/.myst/
+
+_build/
+.vscode/
