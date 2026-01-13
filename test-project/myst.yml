@@ -1,0 +1,17 @@
+# See docs at: https://mystmd.org/guide/frontmatter
+version: 1
+project:
+  id: 1e37918d-7747-4874-82f5-fe1f9a794305
+  # title:
+  # description:
+  # keywords: []
+  # authors: []
+  github: https://github.com/jan-david-fischbach/myst_side_by_side
+  # To autogenerate a Table of Contents, run "myst init --write-toc"
+  plugins:
+    - ../dist/index.mjs
+site:
+  template: book-theme
+  # options:
+  #   favicon: favicon.ico
+  #   logo: site_logo.png

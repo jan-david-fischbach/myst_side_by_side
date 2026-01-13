@@ -13,6 +13,6 @@ try {
 
 // Copy the plugin file to dist
 const pluginContent = readFileSync(`${__dirname}/plugin.mjs`, 'utf-8');
-writeFileSync(`${__dirname}/dist/index.js`, pluginContent);
+writeFileSync(`${__dirname}/dist/index.mjs`, pluginContent);
 
-console.log('Build complete! Plugin copied to dist/index.js');
+console.log('Build complete! Plugin copied to dist/index.mjs');
