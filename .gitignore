@@ -7,3 +7,6 @@ test-project/.myst/
 
 _build/
 .vscode/
+
+*.gds
+*.pdf

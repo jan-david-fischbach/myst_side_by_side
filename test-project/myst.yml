@@ -2,6 +2,9 @@
 version: 1
 project:
   id: 1e37918d-7747-4874-82f5-fe1f9a794305
+  settings:
+    output_matplotlib_strings: remove
+    output_stderr: remove-warn
   # title:
   # description:
   # keywords: []

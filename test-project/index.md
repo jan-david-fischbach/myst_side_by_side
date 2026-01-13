@@ -1,3 +1,10 @@
+---
+export:
+  - format: pdf
+    template: lapreprint-typst
+    output: paper.pdf
+---
+
 # Testing Side-by-Side Plugin
 
 This is a test document to demonstrate the `side-by-side` directive with embedded notebook cells.
@@ -14,12 +21,16 @@ Basic example showing code and output side by side
 :caption: Figure 1: Calculation showing code and result
 ::::
 
+## Example 3: Complex GDSFactory input
+::::{side-by-side} #geometry-polygon
+:caption: Figure 2: GDSFactory polygon geometry
+::::
 
 ## Structure that is generated under the hood
 :::::: {figure}
 ::::: {figure}
 ::::{card}
-:::{embed} #test-cell-1
+:::{embed} #geometry-polygon
 :remove-output: true
 :remove-input: false
 :::
@@ -27,7 +38,7 @@ Basic example showing code and output side by side
 :::::
 
 :::: {figure}
-:::{embed} #test-cell-1
+:::{embed} #geometry-polygon
 :remove-output: false
 :remove-input: true
 :::
@@ -38,7 +49,6 @@ Basic Caption supported
 
 ## Pure `embed`
 ::::{embed} #test-cell-2
-:caption: Figure 1: Calculation showing code and result
 ::::
 
 ## Expected Behavior
