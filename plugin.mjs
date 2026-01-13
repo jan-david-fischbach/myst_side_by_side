@@ -36,9 +36,9 @@ const plugin = {
           ? rawId[0].value 
           : (typeof rawId === 'string' ? rawId : '');
         
-        // Ensure id starts with # for embed
-        if (!id.startsWith('#')) {
-          id = '#' + id;
+        // Remove leading # if present (embed source should be without #)
+        if (id.startsWith('#')) {
+          id = id.substring(1);
         }
         
         // Extract caption from directive body if present
@@ -57,7 +57,7 @@ const plugin = {
           // Left side - Code only
           {
             type: 'embed',
-            label: `embed-${id.replace('#', '')}-code`,
+            label: `embed-${id}-code`,
             source: id,
             'remove-output': true,
             'remove-input': false,
@@ -66,7 +66,7 @@ const plugin = {
           // Right side - Output only
           {
             type: 'embed',
-            label: `embed-${id.replace('#', '')}-output`,
+            label: `embed-${id}-output`,
             source: id,
             'remove-output': false,
             'remove-input': true,
