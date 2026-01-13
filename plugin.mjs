@@ -62,7 +62,7 @@ const plugin = {
       run(data) {
         // Extract and normalize the cell ID from directive arguments
         const rawId = data.arg || '';
-        const id = normalizeId(extractCellId(rawId));
+        let id = normalizeId(extractCellId(rawId));
         
         // Extract caption from directive body if present
         let captionNodes = [];
@@ -75,39 +75,62 @@ const plugin = {
           captionNodes = data.options.caption;
         }
 
-        // Create two side-by-side embed directives
-        const result = [
-          // Left side - Code only
+        // Create the nested container structure matching the reference:
+        // Outer figure container with two nested figure subcontainers
+        // According to MyST embed transform code, embed nodes need source.label
+        const outerChildren = [
+          // Left side - Code only in a figure container
           {
-            type: 'embed',
-            label: `embed-${id}-code`,
-            source: id,
-            'remove-output': true,
-            'remove-input': false,
-            children: []
+            type: 'container',
+            kind: 'figure',
+            subcontainer: true,
+            children: [
+              {
+                type: 'embed',
+                source: {
+                  label: id
+                },
+                'remove-output': true,
+                'remove-input': false,
+                children: []
+              }
+            ]
           },
-          // Right side - Output only
+          // Right side - Output only in a figure container
           {
-            type: 'embed',
-            label: `embed-${id}-output`,
-            source: id,
-            'remove-output': false,
-            'remove-input': true,
-            children: []
+            type: 'container',
+            kind: 'figure',
+            subcontainer: true,
+            children: [
+              {
+                type: 'embed',
+                source: {
+                  label: id
+                },
+                'remove-output': false,
+                'remove-input': true,
+                children: []
+              }
+            ]
           }
         ];
         
-        // Add caption as a separate paragraph if present
-        // Note: Ideally this would be in a container, but MyST directive
-        // run() methods return flat arrays of nodes
+        // Add caption if present
         if (captionNodes.length > 0) {
-          result.push({
-            type: 'paragraph',
+          outerChildren.push({
+            type: 'caption',
             children: captionNodes
           });
         }
         
-        return result;
+        // Return the outer figure container
+        return [
+          {
+            type: 'container',
+            kind: 'figure',
+            children: outerChildren
+          }
+        ];
       }
     }
   ]
