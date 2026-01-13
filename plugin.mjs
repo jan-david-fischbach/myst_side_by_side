@@ -86,13 +86,18 @@ const plugin = {
             subcontainer: true,
             children: [
               {
-                type: 'embed',
-                source: {
-                  label: id
-                },
-                'remove-output': true,
-                'remove-input': false,
-                children: []
+                type: 'card',
+                children: [
+                  {
+                    type: 'embed',
+                    source: {
+                      label: id
+                    },
+                    'remove-output': true,
+                    'remove-input': false,
+                    children: []
+                  }
+                ]
               }
             ]
           },
