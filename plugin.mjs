@@ -8,6 +8,36 @@
 /**
  * Plugin export
  */
+
+/**
+ * Extract cell ID from directive argument data.
+ * Handles both string and parsed MyST argument formats.
+ * @param {*} rawId - The raw argument data from the directive
+ * @returns {string} The extracted cell ID (without leading #)
+ */
+function extractCellId(rawId) {
+  // Handle parsed MyST arguments (array of nodes)
+  if (Array.isArray(rawId) && rawId.length > 0 && rawId[0].value) {
+    return rawId[0].value;
+  }
+  
+  // Handle string arguments
+  if (typeof rawId === 'string') {
+    return rawId;
+  }
+  
+  return '';
+}
+
+/**
+ * Remove leading # from cell ID if present.
+ * @param {string} id - Cell ID that might have a leading #
+ * @returns {string} Cell ID without leading #
+ */
+function normalizeId(id) {
+  return id.startsWith('#') ? id.substring(1) : id;
+}
+
 const plugin = {
   name: 'myst-side-by-side',
   directives: [
@@ -30,16 +60,9 @@ const plugin = {
         doc: 'Caption text (alternative to caption option)'
       },
       run(data) {
-        // Extract the id from the directive arguments  
+        // Extract and normalize the cell ID from directive arguments
         const rawId = data.arg || '';
-        let id = Array.isArray(rawId) && rawId.length > 0 && rawId[0].value 
-          ? rawId[0].value 
-          : (typeof rawId === 'string' ? rawId : '');
-        
-        // Remove leading # if present (embed source should be without #)
-        if (id.startsWith('#')) {
-          id = id.substring(1);
-        }
+        const id = normalizeId(extractCellId(rawId));
         
         // Extract caption from directive body if present
         let captionNodes = [];
@@ -47,7 +70,7 @@ const plugin = {
           captionNodes = data.body;
         }
         
-        // Get caption from options if provided
+        // Get caption from options if provided (takes precedence)
         if (data.options?.caption) {
           captionNodes = data.options.caption;
         }
@@ -74,7 +97,9 @@ const plugin = {
           }
         ];
         
-        // Add caption if present
+        // Add caption as a separate paragraph if present
+        // Note: Ideally this would be in a container, but MyST directive
+        // run() methods return flat arrays of nodes
         if (captionNodes.length > 0) {
           result.push({
             type: 'paragraph',

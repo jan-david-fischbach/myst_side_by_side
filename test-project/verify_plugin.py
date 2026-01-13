@@ -7,6 +7,9 @@ Checks the built JSON output to ensure embed nodes are created properly.
 import json
 import sys
 
+# Default JSON file to check
+DEFAULT_JSON_FILE = '_build/site/content/index.json'
+
 def check_plugin_output(json_file):
     """Check that the plugin generated the expected embed nodes."""
     with open(json_file, 'r') as f:
@@ -83,6 +86,6 @@ def check_plugin_output(json_file):
     return all_valid
 
 if __name__ == '__main__':
-    json_file = '_build/site/content/index.json'
+    json_file = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_JSON_FILE
     success = check_plugin_output(json_file)
     sys.exit(0 if success else 1)
