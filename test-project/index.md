@@ -18,10 +18,12 @@ Basic example showing code and output side by side
 ## Structure that is generated under the hood
 :::::: {figure}
 ::::: {figure}
+::::{card}
 :::{embed} #test-cell-1
 :remove-output: true
 :remove-input: false
 :::
+::::
 :::::
 
 :::: {figure}
