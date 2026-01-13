@@ -5,7 +5,6 @@
   "main": "dist/index.mjs",
   "type": "module",
   "scripts": {
-    "build": "node build.mjs",
     "test": "node test-comprehensive.mjs",
     "test:basic": "node test.mjs"
   },
