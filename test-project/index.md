@@ -26,6 +26,12 @@ Basic example showing code and output side by side
 :caption: Figure 2: GDSFactory polygon geometry
 ::::
 
+## Example 4: Custom Label
+::::{side-by-side} #geometry-polygon
+:caption: Figure 2: GDSFactory polygon geometry
+:label: fig-custom
+::::
+
 ## Structure that is generated under the hood
 :::::: {figure}
 ::::: {figure}
@@ -47,9 +53,6 @@ Basic example showing code and output side by side
 Basic Caption supported
 ::::::
 
-## Pure `embed`
-::::{embed} #test-cell-2
-::::
 
 ## Expected Behavior
 
@@ -57,3 +60,7 @@ The plugin should transform these directives into a layout that shows:
 - Left side: The notebook cell code in a card
 - Right side: The notebook cell output
 - Caption below (if provided)
+
+Further it let's you refer to the figure using standard MyST referencing syntax (see [](#fig-geometry-polygon)). You can also refer to the subfigures with `-code` and `-output` suffixes (see [](#fig-geometry-polygon-code) and [](#fig-geometry-polygon-output)).
+
+The same holds for custom labels (see [](#fig-custom)). You can also refer to the subfigures with `-code` and `-output` suffixes (see [](#fig-custom-code) and [](#fig-custom-output)).

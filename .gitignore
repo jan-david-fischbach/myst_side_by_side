@@ -6,6 +6,7 @@ test-project/_build/
 test-project/.myst/
 
 _build/
+build/
 .vscode/
 
 *.gds

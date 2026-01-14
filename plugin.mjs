@@ -10,26 +10,6 @@
  */
 
 /**
- * Extract cell ID from directive argument data.
- * Handles both string and parsed MyST argument formats.
- * @param {*} rawId - The raw argument data from the directive
- * @returns {string} The extracted cell ID (without leading #)
- */
-function extractCellId(rawId) {
-  // Handle parsed MyST arguments (array of nodes)
-  if (Array.isArray(rawId) && rawId.length > 0 && rawId[0].value) {
-    return rawId[0].value;
-  }
-  
-  // Handle string arguments
-  if (typeof rawId === 'string') {
-    return rawId;
-  }
-  
-  return '';
-}
-
-/**
  * Remove leading # from cell ID if present.
  * @param {string} id - Cell ID that might have a leading #
  * @returns {string} Cell ID without leading #
@@ -45,7 +25,7 @@ const plugin = {
       name: 'side-by-side',
       doc: 'Display external notebook cells side by side with code on left and output on right',
       arg: {
-        type: 'myst',
+        type: String,
         required: true,
         doc: 'The reference ID of the notebook cell to embed (e.g., #cell-id)'
       },
@@ -53,6 +33,10 @@ const plugin = {
         caption: {
           type: 'myst',
           doc: 'Caption for the figure'
+        },
+        label: {
+          type: String,
+          doc: 'label to reference the figure later'
         }
       },
       body: {
@@ -62,7 +46,7 @@ const plugin = {
       run(data) {
         // Extract and normalize the cell ID from directive arguments
         const rawId = data.arg || '';
-        let id = normalizeId(extractCellId(rawId));
+        let id = normalizeId(rawId);
         
         // Extract caption from directive body if present
         let captionNodes = [];
@@ -74,6 +58,9 @@ const plugin = {
         if (data.options?.caption) {
           captionNodes = data.options.caption;
         }
+        
+        console.log(data.options?.label)
+        const label = data.options?.label ?? "fig-".concat(id)
 
         // Create the nested container structure matching the reference:
         // Outer figure container with two nested figure subcontainers
@@ -84,6 +71,7 @@ const plugin = {
             type: 'container',
             kind: 'figure',
             subcontainer: true,
+            label: label.concat("-code"),
             children: [
               {
                 type: 'card',
@@ -106,6 +94,7 @@ const plugin = {
             type: 'container',
             kind: 'figure',
             subcontainer: true,
+            label: label.concat("-output"),
             children: [
               {
                 type: 'embed',
@@ -133,6 +122,8 @@ const plugin = {
           {
             type: 'container',
             kind: 'figure',
+            label: label,
+            identifier: label,
             children: outerChildren
           }
         ];
