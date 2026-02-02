@@ -59,7 +59,7 @@ const plugin = {
           captionNodes = data.options.caption;
         }
         
-        console.log(data.options?.label)
+        // console.log(data.options?.label)
         const label = data.options?.label ?? "fig-".concat(id)
 
         // Create the nested container structure matching the reference:

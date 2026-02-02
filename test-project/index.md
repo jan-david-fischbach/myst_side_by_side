@@ -3,6 +3,14 @@ export:
   - format: pdf
     template: lapreprint-typst
     output: paper.pdf
+abstract: Dummy Abstract
+authors: 
+    - name: Jan David Fischbach
+      orcid: 0009-0003-8765-8920
+      affiliation: 
+        - name: Institute for Nanotechnology, Karlsruhe Institute of Technology
+          url: https://kit.edu
+      github: jan-david-fischbach
 ---
 
 # Testing Side-by-Side Plugin
