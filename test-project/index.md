@@ -1,3 +1,8 @@
+---
+exports:
+  - format: pdf
+---
+
 # Testing Side-by-Side Plugin
 
 This is a test document to demonstrate the `side-by-side` directive with embedded notebook cells.
