@@ -21,25 +21,12 @@ Basic example showing code and output side by side
 
 
 ## Structure that is generated under the hood
-:::::: {figure}
-::::: {figure}
-::::{card}
-:::{embed} #test-cell-1
-:remove-output: true
-:remove-input: false
-:::
-::::
-:::::
 
-:::: {figure}
-:::{embed} #test-cell-1
-:remove-output: false
-:remove-input: true
-:::
-::::
-
-Basic Caption supported
-::::::
+The plugin transforms the `side-by-side` directive into nested containers. Conceptually, it generates:
+- An outer `figure` container
+- Two `subfigure` containers (one for code, one for output)
+- Each subfigure contains an `embed` node with appropriate filters
+- Caption at the outer figure level
 
 ## Pure `embed`
 ::::{embed} #test-cell-2
@@ -49,6 +36,6 @@ Basic Caption supported
 ## Expected Behavior
 
 The plugin should transform these directives into a layout that shows:
-- Left side: The notebook cell code in a card
+- Left side: The notebook cell code
 - Right side: The notebook cell output
 - Caption below (if provided)
