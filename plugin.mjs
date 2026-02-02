@@ -76,36 +76,29 @@ const plugin = {
         }
 
         // Create the nested container structure matching the reference:
-        // Outer figure container with two nested figure subcontainers
+        // Outer figure container with two subfigure containers
         // According to MyST embed transform code, embed nodes need source.label
         const outerChildren = [
-          // Left side - Code only in a figure container
+          // Left side - Code only in a subfigure container
           {
             type: 'container',
-            kind: 'figure',
-            subcontainer: true,
+            kind: 'subfigure',
             children: [
               {
-                type: 'card',
-                children: [
-                  {
-                    type: 'embed',
-                    source: {
-                      label: id
-                    },
-                    'remove-output': true,
-                    'remove-input': false,
-                    children: []
-                  }
-                ]
+                type: 'embed',
+                source: {
+                  label: id
+                },
+                'remove-output': true,
+                'remove-input': false,
+                children: []
               }
             ]
           },
-          // Right side - Output only in a figure container
+          // Right side - Output only in a subfigure container
           {
             type: 'container',
-            kind: 'figure',
-            subcontainer: true,
+            kind: 'subfigure',
             children: [
               {
                 type: 'embed',

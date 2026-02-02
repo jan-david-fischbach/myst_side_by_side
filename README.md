@@ -41,21 +41,19 @@ The directive transforms your input into the following MyST structure:
 ```markdown
 :::::: {figure}
 
-::::: {figure}
-::::{card}
+::::: {subfigure}
 :::{embed} #my-cell-id
 :remove-output: true
 :remove-input: false
 :::
-::::
 :::::
 
-:::: {figure}
+::::: {subfigure}
 :::{embed} #my-cell-id
 :remove-output: false
 :remove-input: true
 :::
-::::
+:::::
 
 Caption text
 ::::::
@@ -63,8 +61,8 @@ Caption text
 
 This creates:
 - An outer figure container
-- Left side: A figure with a card containing the code (input only, no output)
-- Right side: A figure containing the output (output only, no input)
+- Left side: A subfigure containing the code (input only, no output)
+- Right side: A subfigure containing the output (output only, no input)
 - Optional caption at the bottom
 
 ## Development
